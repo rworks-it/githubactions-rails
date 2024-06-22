@@ -23,18 +23,22 @@ jobs:
         
     - name: 依存関係のインストール
       run: |
+        export DB_USERNAME=$DB_USERNAME
+        export DB_PASSWORD=$DB_PASSWORD
+        export DB_HOST=$DB_HOST
+        export DB_PORT=$DB_PORT
         gem install bundler
         bundle install --jobs 4 --retry 3
         
     - name: MySQL のセットアップ
       run: |
         sudo service mysql start
-        mysql -e 'CREATE DATABASE IF NOT EXISTS mwzdqwaa_mfiles_db;'
+        mysql -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
 
     - name: データベースの準備
       run: |
         export RAILS_ENV=production
-        export DATABASE_URL=mysql2://mwzdqwaa_mfiles_db:ryota4729@localhost:3306/mwzdqwaa_mfiles_db
+        export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/githubactions_rails_production
         bundle exec rake db:schema:load
 
     - name: アセットのビルド

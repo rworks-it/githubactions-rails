@@ -31,19 +31,20 @@ jobs:
         bundle install --jobs 4 --retry 3
         
     - name: MySQL のセットアップ
-      run: |
-        sudo service mysql start
-        mysql -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
-
-    - name: データベースの準備
       env:
         DB_USERNAME: ${{ secrets.DB_USERNAME }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
       run: |
-        export RAILS_ENV=production
-        export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/githubactions_rails_production
+        sudo service mysql start
+        mysql -u $DB_USERNAME -p$DB_PASSWORD -h $DB_HOST -P $DB_PORT -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
+
+    - name: データベースの準備
+      env:
+        RAILS_ENV: production
+        DATABASE_URL: mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/githubactions_rails_production
+      run: |
         bundle exec rake db:schema:load
 
     - name: アセットのビルド

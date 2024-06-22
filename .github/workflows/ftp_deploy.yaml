@@ -1,25 +1,59 @@
-name: ftp upload
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
- FTP-Deploy-Action:
-  name: FTP-Deploy-Action
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout repository
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: リポジトリをチェックアウト
       uses: actions/checkout@v2
       
-    - name: FTP Deploy
+    - name: Ruby のセットアップ
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0.0'
+        
+    - name: 依存関係のインストール
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        
+    - name: MySQL のセットアップ
+      run: |
+        sudo service mysql start
+        mysql -e 'CREATE DATABASE IF NOT EXISTS mwzdqwaa_mfiles_db;'
+
+    - name: データベースの準備
+      run: |
+        export RAILS_ENV=production
+        export DATABASE_URL=mysql2://mwzdqwaa_mfiles_db:ryota4729@localhost:3306/mwzdqwaa_mfiles_db
+        bundle exec rake db:schema:load
+
+    - name: アセットのビルド
+      run: |
+        export RAILS_ENV=production
+        bundle exec rake assets:precompile
+      
+    - name: FTPS を使用してデプロイ
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
-        local-dir: test_deploy/
+        local-dir: public/assets
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}
         args: --delete
+
+
+    - name: クリーンアップ
+      run: |
+        sudo service mysql stop  # MySQL サービスの停止

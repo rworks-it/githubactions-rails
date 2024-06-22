@@ -11,6 +11,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
     
     steps:
     - name: リポジトリをチェックアウト
@@ -26,21 +36,16 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
         
-    - name: MySQL のセットアップ
-      env:
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-        DB_PORT: ${{ secrets.DB_PORT }}
-      run: |
-        sudo service mysql start
-        mysql -u $DB_USERNAME -h $DB_HOST -P $DB_PORT -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
-
     - name: データベースの準備
       env:
-        RAILS_ENV: production
-        DATABASE_URL: mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/githubactions_rails_production
+        DB_USERNAME: root
+        DB_PASSWORD: ""
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
       run: |
+        export RAILS_ENV=production
+        export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/githubactions_rails_production
+        mysql -u $DB_USERNAME -p$DB_PASSWORD -h $DB_HOST -P $DB_PORT -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
         bundle exec rake db:schema:load
 
     - name: アセットのビルド

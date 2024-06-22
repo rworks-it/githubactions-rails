@@ -59,7 +59,7 @@ production:
   # host: <%= ENV['DB_HOST'] %>
   # port: <%= ENV['DB_PORT'] %>
   username: rworksit@mfiles-api.rworks.biz
-  password: Ryota4729
+  password: ryota4729
   host: localhost
   port: 3306
   database: githubactions_rails_production

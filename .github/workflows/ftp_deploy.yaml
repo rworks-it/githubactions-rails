@@ -19,7 +19,7 @@ jobs:
     - name: Ruby のセットアップ
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0.0'
+        ruby-version: '3.3.0'
         
     - name: 依存関係のインストール
       run: |

@@ -1,0 +1,25 @@
+name: ftp upload
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+ FTP-Deploy-Action:
+  name: FTP-Deploy-Action
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftps
+        local-dir: test_deploy/
+        server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+        args: --delete

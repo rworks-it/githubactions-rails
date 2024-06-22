@@ -34,7 +34,7 @@ jobs:
         DB_PORT: ${{ secrets.DB_PORT }}
       run: |
         sudo service mysql start
-        mysql -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} -h ${{ secrets.DB_HOST }} -P ${{ secrets.DB_PORT }} -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
+        mysql -u $DB_USERNAME -h $DB_HOST -P $DB_PORT -e 'CREATE DATABASE IF NOT EXISTS githubactions_rails_production;'
 
     - name: データベースの準備
       env:

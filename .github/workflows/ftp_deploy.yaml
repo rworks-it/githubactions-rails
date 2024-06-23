@@ -54,7 +54,7 @@ jobs:
     - name: アセットのビルド
       run: |
         export RAILS_ENV=production
-        export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
+        export DATABASE_URL=${{ secrets.DATABASE_URL }}
         bundle exec rake assets:precompile
       
     - name: FTPS を使用してデプロイ

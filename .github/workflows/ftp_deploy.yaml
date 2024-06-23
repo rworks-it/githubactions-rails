@@ -64,8 +64,7 @@ jobs:
 
     - name: ディレクトリの確認
       run: |
-        ls -la public
-        ls -la public/assets
+        ls  public/assets/
       
     - name: FTPS を使用してデプロイ
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -74,6 +73,6 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
-        local-dir: /public/assets/
+        local-dir: public/assets/
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}
         args: --delete

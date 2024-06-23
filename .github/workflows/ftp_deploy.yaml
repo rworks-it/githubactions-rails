@@ -40,11 +40,13 @@ jobs:
         bundle install --jobs 4 --retry 3
 
     - name: Print DB_USERNAME secret
-      run: echo "DB_HOST: ${{ secrets.DB_USERNAME }}"
+      run: echo "DB_USERNAME:" ${{ secrets.DB_USERNAME }}
+
     - name: Print DB_PASSWORD secret
-      run: echo "DB_HOST: ${{ secrets.DB_PASSWORD }}"
+      run: echo "DB_PASSWORD:" ${{ secrets.DB_PASSWORD }}
+
     - name: Print DB_HOST secret
-      run: echo "DB_HOST: ${{ secrets.DB_HOST }}"
+      run: echo "DB_HOST:" ${{ secrets.DB_HOST }}
         
     - name: データベースの準備
       env:

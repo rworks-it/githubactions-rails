@@ -38,22 +38,23 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
-        
-    - name: データベースの準備
-      env:
-        DB_USERNAME: ${{ secrets.DB_USERNAME }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
-      run: |
-        export RAILS_ENV=production
-        export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_USERNAME
-        sudo service mysql start
-        mysql --protocol=tcp -u mwzdqwaa_mfiles_db -p$DB_PASSWORD -h $DB_HOST
-        # bundle exec rake db:schema:load
+
+    # - name: テスト用データベースの準備
+    #   run: |
+    #       cp config/database.ci.yml config/database.yml
+    #       bundle exec rails db:create RAILS_ENV=test
+    #       bundle exec rails db:migrate RAILS_ENV=test
+  
+    # - name: RSpecテスト
+    #   run: bundle exec rspec spec/models spec/requests  spec/system 
+
+    # - name: RuboCopテスト
+    #   run: bundle exec rubocop
 
     - name: アセットのビルド
       run: |
         export RAILS_ENV=production
+        export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
         bundle exec rake assets:precompile
       
     - name: FTPS を使用してデプロイ
@@ -66,7 +67,3 @@ jobs:
         local-dir: public/assets
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}
         args: --delete
-
-    - name: クリーンアップ
-      run: |
-        sudo service mysql stop  # MySQL サービスの停止

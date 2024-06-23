@@ -19,7 +19,8 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          # MYSQL_ALLOW_EMPTY_PASSWORD: yes
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -51,10 +52,14 @@ jobs:
     # - name: RuboCopテスト
     #   run: bundle exec rubocop
 
-    - name: アセットのビルド
+    - name: 環境変数の設定
       run: |
         export RAILS_ENV=production
         export DATABASE_URL=${{ secrets.DATABASE_URL }}
+        export SECRET_KEY_BASE=${{ secrets.RAILS_SECRET_KEY_BASE }}
+
+    - name: アセットのビルド
+      run: |
         bundle exec rake assets:precompile
       
     - name: FTPS を使用してデプロイ

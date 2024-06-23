@@ -38,6 +38,13 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
+
+    - name: Print DB_USERNAME secret
+      run: echo "DB_HOST: ${{ secrets.DB_USERNAME }}"
+    - name: Print DB_PASSWORD secret
+      run: echo "DB_HOST: ${{ secrets.DB_PASSWORD }}"
+    - name: Print DB_HOST secret
+      run: echo "DB_HOST: ${{ secrets.DB_HOST }}"
         
     - name: データベースの準備
       env:
@@ -45,9 +52,6 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
       run: |
-        echo "DB_USERNAME:",  $DB_USERNAME
-        echo "DB_PASSWORD:",  $DB_PASSWORD
-        echo "DB_HOST:", $DB_HOST
         export RAILS_ENV=production
         export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_USERNAME
         sudo service mysql start

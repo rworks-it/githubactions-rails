@@ -38,15 +38,6 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
-
-    - name: Print DB_USERNAME secret
-      run: echo "DB_USERNAME:" ${{ secrets.DB_USERNAME }}
-
-    - name: Print DB_PASSWORD secret
-      run: echo "DB_PASSWORD:" ${{ secrets.DB_PASSWORD }}
-
-    - name: Print DB_HOST secret
-      run: echo "DB_HOST:" ${{ secrets.DB_HOST }}
         
     - name: データベースの準備
       env:
@@ -57,7 +48,7 @@ jobs:
         export RAILS_ENV=production
         export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_USERNAME
         sudo service mysql start
-        mysql -u $DB_USERNAME -p$DB_PASSWORD -h $DB_HOST -e 'CREATE DATABASE IF NOT EXISTS $DB_USERNAME;'
+        mysql --protocol=tcp -u mwzdqwaa_mfiles_db -pryota4729 -h 127.0.0.1'
         bundle exec rake db:schema:load
 
     - name: アセットのビルド

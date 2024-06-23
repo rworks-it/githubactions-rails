@@ -48,7 +48,7 @@ jobs:
         export RAILS_ENV=production
         export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_USERNAME
         sudo service mysql start
-        mysql --protocol=tcp -u mwzdqwaa_mfiles_db -p$DB_PASSWORD -h $DB_HOST'
+        mysql --protocol=tcp -u mwzdqwaa_mfiles_db -p$DB_PASSWORD -h $DB_HOST
         # bundle exec rake db:schema:load
 
     - name: アセットのビルド

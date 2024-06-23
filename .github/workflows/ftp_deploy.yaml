@@ -64,7 +64,6 @@ jobs:
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}
         args: --delete
 
-
     - name: クリーンアップ
       run: |
         sudo service mysql stop  # MySQL サービスの停止

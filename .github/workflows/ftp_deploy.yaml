@@ -38,6 +38,12 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
+
+    - name: Print variables
+      run: |
+        echo "DB_USERNAME: ${{ secrets.DB_USERNAME }}"
+        echo "DB_PASSWORD: ${{ secrets.DB_PASSWORD }}"
+        echo "DB_HOST: ${{ secrets.DB_HOST }}"
         
     - name: データベースの準備
       env:

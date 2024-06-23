@@ -44,6 +44,7 @@ jobs:
       run: |
         export RAILS_ENV=production
         export DATABASE_URL=mysql2://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_USERNAME
+        sudo service mysql start
         mysql -u $DB_USERNAME -p$DB_PASSWORD -h $DB_HOST -e 'CREATE DATABASE IF NOT EXISTS $DB_USERNAME;'
         bundle exec rake db:schema:load
 

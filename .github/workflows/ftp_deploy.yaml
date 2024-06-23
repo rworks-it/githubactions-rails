@@ -69,6 +69,6 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         protocol: ftps
-        local-dir: public/assets
+        local-dir: /public/assets/
         server-dir: ${{ secrets.FTP_REMOTE_DIR }}
         args: --delete

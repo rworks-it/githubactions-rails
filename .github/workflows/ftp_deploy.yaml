@@ -61,10 +61,6 @@ jobs:
     - name: アセットのビルド
       run: |
         bundle exec rake assets:precompile
-
-    - name: ディレクトリの確認
-      run: |
-        ls  public/assets/
       
     - name: FTPS を使用してデプロイ
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
